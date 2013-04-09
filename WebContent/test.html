@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- <script language="javascript" src="xxx.js"></script> 
+
+-->
+<title>Insert title here</title>
+</head>
+<body>
+<script type="text/javascript">
+function judge() {
+	 var score;//分数
+	 var degree;//分数等级
+	 score = prompt("你的分数是多少？")
+	 if (score > 100){
+	 degree = '耍我？100分满！';
+	 }
+	 else{
+	 switch (parseInt(score / 10)) {
+	 case 0:
+	 case 1:
+	 case 2:
+	 case 3:
+	 case 4:
+	 case 5:
+	 degree = "恭喜你，又挂了！";
+	 break;
+	 case 6:
+	 degree = "勉强及格";
+	 break;
+	 case 7:
+	 degree = "凑合，凑合"
+	 break;
+	 case 8:
+	 degree = "8错，8错";
+	 break;
+	 case 9:
+	 case 10:
+	 degree = "高手高手，佩服佩服";
+	 }//end of switch
+	 }//end of else
+	 alert(degree);
+	 }
+</script>
+
+<button  onclick=judge()>all</button>
+
+</body>
+</html>
