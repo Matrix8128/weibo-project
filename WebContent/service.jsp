@@ -55,9 +55,10 @@
 		int MAX = 5000;//防止出错死循环不停地抓
 		int count = 50;
 		int cursor = 0;
-		try {
+ 		try {
 				User centreUser=um.showUserByScreenName(name);
 				json.put("id", centreUser.getId());
+				json.put("head",centreUser.getProfileImageURL());
 				ArrayList biIds=fm.myGetFriendsBilateralIds(centreUser.getId());
 				System.out.println(biIds.size());
 				System.out.println(biIds.toString());
@@ -72,37 +73,32 @@
 						JSONObject member = new JSONObject();
 						member.put("name", u.getScreenName());
 						member.put("id", u.getId());
+						member.put("head",u.getProfileImageURL());
 						biFriendArray.put(member);
 					} else {
 						uniFriendNum++;
 						JSONObject member = new JSONObject();
 						member.put("name", u.getScreenName());
 						member.put("id", u.getId());
-						uniFriendArray.put(member);
+						member.put("head",u.getProfileImageURL());
+						//uniFriendArray.put(member);
 					}
 					// System.out.println(incaseNum+":"+u.getScreenName());
 				}
 				cursor = (int) users.getNextCursor();
-				/*System.out.println(users.getNextCursor());
-				System.out.println(users.getPreviousCursor());
-				System.out.println(users.getTotalNumber());
-				System.out.println(cursor + ":" + users.getNextCursor());*/
+
 				if (cursor == 0 || incaseNum > MAX)
 					break;
 			}
+			
 			json.put("biFriendNum", biFriendNum);
 			json.put("uniFriendNum", uniFriendNum);
 			json.put("biFriends", biFriendArray);
 			json.put("uniFriends", uniFriendArray);
 		} catch (WeiboException e) {
 			json.put("error",e.getError());
-/* 			System.out.println(e.getError());
-			System.out.println(e.getMessage());
-			System.out.println(e.getLocalizedMessage());
-			System.out.println(e.getRequest());
-			System.out.println(e.toString()); */
 			e.printStackTrace();
-		}
+		}  
 		PrintWriter pw = response.getWriter();//用导入java.io.*,或者java.io.PrintWriter否则错误
 		pw.print(json.toString());
 		System.out.println("json object :" + json.toString());

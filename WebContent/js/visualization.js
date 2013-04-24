@@ -4,8 +4,7 @@
 //  A project template for using arbor.js
 //
 
-Visualization = function(workplace, canvasId, data) {
-	
+Visualization = function(info,workplace, canvasId, data) {
 	var canvas = $(canvasId).get(0)
 	
 	var sys = arbor.ParticleSystem(1000, 600, 0.5) // create the system with
@@ -15,7 +14,10 @@ Visualization = function(workplace, canvasId, data) {
 		gravity : false
 	}) // use center-gravity to make the graph settle nicely (ymmv)
 	sys.parameters({stiffness:1000, repulsion:500, gravity:true, dt:0.015})
-	sys.renderer = Renderer(canvasId) // our newly created renderer will have
+	//sys.parameters({stiffness:4000,repulsion:200,Friction:9,graviey:true,fps:30,dt:.035,precision:.6})
+
+	var eventHandler=EventHandler(info,workplace)
+	sys.renderer = Renderer(canvasId,eventHandler) // our newly created renderer will have
 									// its .init() method called shortly by
 										// sys...
 
@@ -28,7 +30,7 @@ Visualization = function(workplace, canvasId, data) {
 			canvas.width =  $(workplace).width()
 			canvas.height = $(workplace).height()
 			sys.screenSize(canvas.width, canvas.height)
-			//sys.renderer.redraw() //µÚÒ»´Î²»ÄÜÓÃsys.renderer.redraw()£¬·ñÔòÊµÑé±íÃ÷£¬»áËÀÑ­»·Ò»Ö±redrawÏÂÈ¥
+			//sys.renderer.redraw() //ï¿½ï¿½Ò»ï¿½Î²ï¿½ï¿½ï¿½ï¿½ï¿½sys.renderer.redraw()ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ­ï¿½ï¿½Ò»Ö±redrawï¿½ï¿½È¥
 			
 			that.handleData(data)
 			
@@ -48,31 +50,24 @@ Visualization = function(workplace, canvasId, data) {
 			nodesData={}
 			edgesData={}
 			
-			nodesData[data.name]={mass:6,fixed:true,color:"red",type:"centre"}
-			edgesData[data.name]={}
+			nodesData[data.id]={mass:6,fixed:true,color:"red",type:"centre",screenName:data.name
+								,head:data.head}
+			edgesData[data.id]={}
 			
 			$.each(data.biFriends,function(index,user){
-				nodesData[user.name]={mass:3,color:"green",type:"bi",alpha:1}
-				edgesData[data.name][user.name]={length:.1}
+				nodesData[user.id]={mass:3,color:"green",type:"bi",alpha:1,screenName:user.name
+									,head:user.head}
+				edgesData[data.id][user.id]={length:.1}
 			})
 			
 			$.each(data.uniFriends,function(index,user){
-				nodesData[user.name]={mass:1,color:"blue",type:"uni",alpha:1}
-				edgesData[data.name][user.name]={length:.9}
+				nodesData[user.id]={mass:1,color:"blue",type:"uni",alpha:1,screenName:user.name
+									,head:user.head}
+				edgesData[data.id][user.id]={length:.9}
 			})
-			
+
 			sys.graft({nodes:nodesData,edges:edgesData})
-			
-			//sys.merge({nodes:nodesData,edges:edgesData})
-			/*
-			sys.addEdge('a', 'b')
-			sys.addEdge('a', 'c')
-			sys.addEdge('a', 'd')
-			sys.addEdge('a', 'e')
-			sys.addNode('f', {
-				alone : true,
-				mass : 5.0
-			})*/
+
 		}
 		
 		
