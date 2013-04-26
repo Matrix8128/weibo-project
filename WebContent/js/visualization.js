@@ -4,11 +4,9 @@
 //  A project template for using arbor.js
 //
 
-(function(){
-Visualization = function(info,workplace, canvasId) {
-	
+Visualization = function(info,workplace, canvasId, data) {
 	var canvas = $(canvasId).get(0)
-	var dataHandler = new DataHandler()
+	
 	var sys = arbor.ParticleSystem(1000, 600, 0.5) // create the system with
 													// sensible
 													// repulsion/stiffness/friction
@@ -33,25 +31,10 @@ Visualization = function(info,workplace, canvasId) {
 			canvas.height = $(workplace).height()
 			sys.screenSize(canvas.width, canvas.height)
 			//sys.renderer.redraw() //��һ�β�����sys.renderer.redraw()������ʵ�����������ѭ��һֱredraw��ȥ
-			//$("#search").bind("click",that.getData())//为什么不能用这句而一定要用下面那句？
-			$("#submitButton").bind("click",function(){
-				that.getData()
-			})
 			
-		},
-		getData:function(){
-			//alert("in")
-			if ($('#username').val().length == 0) {
-				alert("can't be blank");
-			} else {
-				username = $('#username').val()
-				levels = $("#levels").val()
-				types = $("#types").val()
-	 			dataHandler.getUser(username,1,'temp',function(data){
-					that.handleData(data)
-					that.resize()
-				}) 
-			}
+			that.handleData(data)
+			
+			return that
 		},
 		resize : function() {
 			var w = $(workplace).width()
@@ -66,20 +49,24 @@ Visualization = function(info,workplace, canvasId) {
 			//edgeColor="rgba(255,255,255,.5)"
 			nodesData={}
 			edgesData={}
+			
 			nodesData[data.id]={mass:6,fixed:true,color:"red",type:"centre",screenName:data.name
 								,head:data.head}
 			edgesData[data.id]={}
+			
 			$.each(data.biFriends,function(index,user){
 				nodesData[user.id]={mass:3,color:"green",type:"bi",alpha:1,screenName:user.name
 									,head:user.head}
 				edgesData[data.id][user.id]={length:.1}
 			})
+			
 			$.each(data.uniFriends,function(index,user){
 				nodesData[user.id]={mass:1,color:"blue",type:"uni",alpha:1,screenName:user.name
 									,head:user.head}
 				edgesData[data.id][user.id]={length:.9}
 			})
-			sys.merge({nodes:nodesData,edges:edgesData})
+
+			sys.graft({nodes:nodesData,edges:edgesData})
 
 		}
 		
@@ -87,9 +74,3 @@ Visualization = function(info,workplace, canvasId) {
 	}
 	return that.init()
 }
-
-	$(document).ready(function(){
-		var vi = Visualization("#info", "#workplace", "#viewport");
-	})
-
-})()
