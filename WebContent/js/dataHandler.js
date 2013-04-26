@@ -4,7 +4,6 @@
 			
 		
 		this.errorHandler=function(data) {
-			alert("inin")
 			if (data.hasOwnProperty("error")) {
 				alert(data.error)
 				return false
@@ -41,6 +40,7 @@
 							alert(XMLResponse.responseText)
 						}
 					});
+			
 		}
 		this.usersManger=function(userName){
 			var result=null
